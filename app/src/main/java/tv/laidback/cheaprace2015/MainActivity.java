@@ -88,7 +88,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
      */
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.d(TAG, "onPageScrolled(),i=" + i + " v=" + v + " i2=" + i2);
+        Log.d(TAG, "onPageScrolled()");
     }
 
     /**
@@ -136,15 +136,15 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             // The sliding pages and their positions:
             switch (position) {
                 case 0:
-                    return TeamsLaunchFragment.newInstance(position+1);
+                    return TeamsFragment.newInstance(position+1);
                 case 1:
-                    return MapLaunchFragment.newInstance(position+1);
+                    return MapFragment.newInstance(position+1);
                 case 2:
-                    return WalkieTalkieLaunchFragment.newInstance(position+1);
+                    return WalkieTalkieFragment.newInstance(position+1);
                 case 3:
                     return ShareFragment.newInstance(position+1);
             }
-            return TeamsLaunchFragment.newInstance(position+1);
+            return TeamsFragment.newInstance(position+1);
         }
 
         @Override
