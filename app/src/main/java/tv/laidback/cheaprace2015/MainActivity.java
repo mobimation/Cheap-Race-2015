@@ -18,11 +18,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 
 public class MainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -41,8 +42,12 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        // Request fullscreen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_main);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -51,7 +56,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        mViewPager.setOnPageChangeListener(this);
     }
 
 
@@ -107,14 +112,14 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
      * begins dragging, when the pager is automatically settling to the current page,
      * or when it is fully stopped/idle.
      *
-     * @param state The new scroll state.
+     * @param i The new scroll state.
      * @see ViewPager#SCROLL_STATE_IDLE
      * @see ViewPager#SCROLL_STATE_DRAGGING
      * @see ViewPager#SCROLL_STATE_SETTLING
      */
     @Override
-    public void onPageScrollStateChanged(int state) {
-
+    public void onPageScrollStateChanged(int i) {
+        Log.d(TAG,"onPageScrollStateChanged(), i="+i);
     }
 
 
@@ -138,10 +143,11 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 case 0:
                     return TeamsFragment.newInstance(position+1);
                 case 1:
-                    return MapFragment.newInstance(position+1);
+                    // return TeamsFragment.newInstance(position+1);
+                    // return MapFragment.newInstance(position+1);
+                // case 2:
+                     return WalkieTalkieFragment.newInstance(position+1);
                 case 2:
-                    return WalkieTalkieFragment.newInstance(position+1);
-                case 3:
                     return ShareFragment.newInstance(position+1);
             }
             return TeamsFragment.newInstance(position+1);
@@ -150,7 +156,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         @Override
         public int getCount() {
             // Total pages.
-            return 4;
+            return 3;
         }
 
         @Override
@@ -164,6 +170,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 case 2:
                     return "Walkie Talkie";
                 case 3:
+                    return "Share";
             }
             return null;
         }
@@ -172,18 +179,18 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+ //   public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+  //      private static final String ARG_SECTION_NUMBER = "section_number";
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+   /*     public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -200,6 +207,6 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
-    }
+    } */
 
 }
