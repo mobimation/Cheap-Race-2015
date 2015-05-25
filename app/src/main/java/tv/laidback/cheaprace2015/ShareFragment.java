@@ -1,6 +1,7 @@
 package tv.laidback.cheaprace2015;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,12 +12,13 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShareFragment extends Fragment {
+public class ShareFragment extends Fragment implements OnShareFragmentInteractionListener {
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
+    OnShareFragmentInteractionListener mListener;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -34,7 +36,22 @@ public class ShareFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnShareFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,5 +59,8 @@ public class ShareFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_share, container, false);
     }
 
+    @Override
+    public void onFragmentInteraction(String string) {
 
+    }
 }

@@ -143,11 +143,10 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 case 0:
                     return TeamsFragment.newInstance(position+1);
                 case 1:
-                    // return TeamsFragment.newInstance(position+1);
-                    // return MapFragment.newInstance(position+1);
-                // case 2:
-                     return WalkieTalkieFragment.newInstance(position+1);
+                    return MapFragment.newInstance(position+1);
                 case 2:
+                     return WalkieTalkieFragment.newInstance(position+1);
+                case 3:
                     return ShareFragment.newInstance(position+1);
             }
             return TeamsFragment.newInstance(position+1);
@@ -156,7 +155,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         @Override
         public int getCount() {
             // Total pages.
-            return 3;
+            return 4;
         }
 
         @Override

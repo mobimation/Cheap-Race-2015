@@ -12,20 +12,20 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TeamsFragment.OnFragmentInteractionListener} interface
+ * {@link OnTeamsFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link TeamsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TeamsFragment extends Fragment {
+public class TeamsFragment extends Fragment implements OnTeamsFragmentInteractionListener {
 
-    private OnFragmentInteractionListener mListener;
+    OnTeamsFragmentInteractionListener mListener;
 
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String ARG_SECTION_NUMBER = "section_number";
+    static String ARG_SECTION_NUMBER = "section_number";
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -55,43 +55,8 @@ public class TeamsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_teams, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+    public void onFragmentInteraction(String string) {
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
 }
