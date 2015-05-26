@@ -1,0 +1,21 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="tv.laidback.cheaprace2015.TeamsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/location_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.google.android.gms.maps.SupportMapFragment" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:layout_gravity="left|top"
+        android:src="@drawable/cheaprace_logo_land"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp" />
+
+</FrameLayout>

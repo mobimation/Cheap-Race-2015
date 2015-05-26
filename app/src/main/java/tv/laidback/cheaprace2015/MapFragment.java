@@ -1,20 +1,16 @@
 package tv.laidback.cheaprace2015;
 
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -39,7 +35,7 @@ public class MapFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-
+    private static final String TAG = MapFragment.class.getSimpleName();
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -58,11 +54,12 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // inflat and return the layout
 
-        view = inflater.inflate(R.layout.fragment_location_info, container,
+        view = inflater.inflate(R.layout.fragment_map, container,
                 false);
 
-        latitude = 26.78;
-        longitude = 72.56;
+        // Eastbourne XJ Restorations
+        latitude = 50.780186;
+        longitude = 0.287187;
 
         setUpMapIfNeeded();
 
@@ -98,7 +95,19 @@ public class MapFragment extends Fragment {
         gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("My Home").snippet("Home Address"));
         // For zooming automatically to the Dropped PIN Location
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,
-                longitude), 12.0f));
+                longitude), 7.64f));
+        gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        gMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            private float currentZoom = -1;
+
+            @Override
+            public void onCameraChange(CameraPosition pos) {
+                if (pos.zoom != currentZoom) {
+                    currentZoom = pos.zoom;
+                    Log.d(TAG, "Zoom changed to " + currentZoom);
+                }
+            }
+        });
     }
 
     @Override
