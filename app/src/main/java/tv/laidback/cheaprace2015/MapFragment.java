@@ -1,16 +1,19 @@
 package tv.laidback.cheaprace2015;
 
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -22,8 +25,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class MapFragment extends Fragment {
 
-    MapView mMapView;
-    private GoogleMap googleMap;
+    private static View view;
+
+    GoogleMap gMap;
+    Double latitude, longitude;
 
     public MapFragment() {
         // Required empty public constructor
@@ -47,70 +52,86 @@ public class MapFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // inflat and return the layout
-        View v = inflater.inflate(R.layout.fragment_location_info, container,
+
+        view = inflater.inflate(R.layout.fragment_location_info, container,
                 false);
-        mMapView = (MapView) v.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
 
-        mMapView.onResume();// needed to get the map to display immediately
+        latitude = 26.78;
+        longitude = 72.56;
 
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
+        setUpMapIfNeeded();
+
+        return view;
+    }
+
+    /***** Sets up the map if it is possible to do so *****/
+    public void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (  gMap == null) {
+            // Try to obtain the map from the SupportMapFragment
+            android.support.v4.app.FragmentManager fm=getChildFragmentManager();
+            SupportMapFragment smf= ((SupportMapFragment) fm.findFragmentById(R.id.location_map));
+
+            gMap = smf.getMap();
+            // Check if we were successful in obtaining the map.
+            if (gMap != null)
+                setUpMap();
         }
+    }
 
-        googleMap = mMapView.getMap();
-        // latitude and longitude
-        double latitude = 17.385044;
-        double longitude = 78.486671;
-
-        // create marker
-        MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude)).title("Hello Maps");
-
-        // Changing marker icon
-        marker.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
-
-        // adding marker
-        googleMap.addMarker(marker);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(17.385044, 78.486671)).zoom(12).build();
-        googleMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(cameraPosition));
-
-        // Perform any camera updates here
-        return v;
+    /**
+     * This is where we can add markers or lines, add listeners or move the
+     * camera.
+     * <p>
+     * This should only be called once and when we are sure that {@link #gMap}
+     * is not null.
+     */
+    private void setUpMap() {
+        // For showing a move to my loction button
+         gMap.setMyLocationEnabled(true);
+        // For dropping a marker at a point on the Map
+        gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("My Home").snippet("Home Address"));
+        // For zooming automatically to the Dropped PIN Location
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,
+                longitude), 12.0f));
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        if (gMap != null)
+            setUpMap();
+
+        if (gMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            gMap = ((SupportMapFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.location_map)).getMap(); // getMap is deprecated
+            // Check if we were successful in obtaining the map.
+            if (gMap != null)
+                setUpMap();
+        }
     }
 
+    /**** The mapfragment's id must be removed from the FragmentManager
+     **** or else if the same it is passed on the next time then
+     **** app will crash ****/
     @Override
-    public void onPause() {
-        super.onPause();
-        mMapView.onPause();
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (gMap != null) {
+            getChildFragmentManager().beginTransaction()
+                    .remove(getChildFragmentManager().findFragmentById(R.id.location_map)).commit();
+            gMap = null;
+        }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-    }
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
-    }
+
 }
 
 
