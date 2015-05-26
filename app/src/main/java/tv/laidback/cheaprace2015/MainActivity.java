@@ -39,6 +39,24 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
      */
     ViewPager mViewPager;
 
+    /**
+     * Constants that define the possible vehicle types (1..4)
+     */
+    public static final int ELECTRIC_BIKE=0;
+    public static final int ELECTRIC = 2;
+    public static final int HYBRID = 3;
+    public static final int PETROL = 1;
+    public static final int DIESEL = 4;
+
+
+    public static final String[] vehicleNames={
+            "Elcykel",
+            "Bensinbil",
+            "Elbil",
+            "Laddhybrid",
+            "Dieselbil"
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
