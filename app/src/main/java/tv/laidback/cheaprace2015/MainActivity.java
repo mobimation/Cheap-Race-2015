@@ -2,6 +2,9 @@ package tv.laidback.cheaprace2015;
 
 import java.util.Locale;
 
+import android.content.ComponentName;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -39,6 +42,79 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
      */
     ViewPager mViewPager;
 
+    /**
+     * Manage service interaction when UI rotates.
+     * Rotation causes the activity to die. So it is relaunched.
+     * When that happens it needs to reconnect to a running service.
+     * @return
+     */
+    private ServiceConnection sc() {
+        Log.i(TAG,"Instantiating ServiceConnection object");
+        ServiceConnection sconn = new ServiceConnection() {
+            public void onServiceConnected(ComponentName className, IBinder service) {
+                // This is called when the connection with the service has been
+                // established, giving us the service object we can use to
+                // interact with the service. Because we have bound to a explicit
+                // service that we know is running in our own process, we can
+                // cast its IBinder to a concrete class and directly access it.
+                Log.i(TAG,"onServiceConnected()");
+
+                mBoundService = ((LocalisationService.LocalBinder) service)
+                        .getService();
+                mIsBound = true;
+                doBindService();
+                setupGui();  // Setup GUI that displays service progress
+                refreshDisplay(); // Added in version 40
+                btnStartRide.setVisibility(View.GONE);
+            }
+
+            public void onServiceDisconnected(ComponentName className) {
+                // This is called when the service stops running
+                Log.i(TAG,"onServiceDisconnected()");
+                mBoundService = null;
+
+                // Toast.makeText(MainActivity.this,
+                // R.string.local_service_disconnected, Toast.LENGTH_SHORT).show();
+                doUnbindService();
+                mIsBound=false;
+                setupGui();
+                // wait for a new connection
+                //doBindService();
+            }
+        };
+        return sconn;
+    }
+
+    void doBindService() {
+        // Care to bind with the service only if it´s running.
+        // That way we avoid ServiceConnection leak errors in the event log..
+        // Call this one from onResume or onServiceConnected...
+        if (LocalisationService.isInstanceCreated()) {  // If service running
+            // In case the system kills the service we are in trouble but for Laddbil
+            // we can afford to gamble on it not happening. The trouble being that
+            // onDestroy of the service is not called in that special case and
+            // our little isInstanceCreated solution will be indicating things are still running.
+            if (mConnection==null)
+                mConnection=sc();
+            Log.i(TAG,"binds LocalisationService");
+            bindService(new Intent(MainActivity.this, LocalisationService.class),
+                    mConnection, 0);
+        }
+    }
+
+    void doUnbindService() {
+        if (mIsBound) {
+            // Unbind service, call this method upon onDestroyed, onPause, onStop
+            //
+            Log.i(TAG,"unbinds LocalisationService");
+            unbindService(mConnection);
+            mIsBound = false;
+            setupGui();
+        }
+    }
+
+    private LocalisationService mBoundService;
+    private boolean mIsBound = false;
     /**
      * Constants that define the possible vehicle types (1..4)
      */
