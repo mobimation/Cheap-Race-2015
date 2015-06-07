@@ -1,6 +1,5 @@
 package tv.laidback.cheaprace2015;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,11 +9,11 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 
 /**
  * A fragment that launches a Google Maps view
@@ -52,10 +51,9 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // inflat and return the layout
-
-        view = inflater.inflate(R.layout.fragment_map, container,
-                false);
+        Log.d(TAG,"onCreateView()");
+        // inflate and return the layout
+        view = inflater.inflate(R.layout.fragment_map, container, false);
 
         // Eastbourne XJ Restorations
         latitude = 50.780186;
@@ -69,15 +67,24 @@ public class MapFragment extends Fragment {
     /***** Sets up the map if it is possible to do so *****/
     public void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
-        if (  gMap == null) {
+        if (gMap == null) {
             // Try to obtain the map from the SupportMapFragment
-            android.support.v4.app.FragmentManager fm=getChildFragmentManager();
-            SupportMapFragment smf= ((SupportMapFragment) fm.findFragmentById(R.id.location_map));
+            android.support.v4.app.FragmentManager fm = getChildFragmentManager();
+            SupportMapFragment smf = ((SupportMapFragment) fm.findFragmentById(R.id.location_map));
 
-            gMap = smf.getMap();
-            // Check if we were successful in obtaining the map.
+            // gMap = smf.getMap();
+            smf.getMapAsync(
+                    new OnMapReadyCallback() {
+                        @Override
+                        public void onMapReady(GoogleMap googleMap) {
+                            Log.d(TAG,"onMapReady() #1");
+                            setUpMap(googleMap);
+                        }
+                    });
+       /*     // Check if we were successful in obtaining the map.
             if (gMap != null)
                 setUpMap();
+        } */
         }
     }
 
@@ -88,9 +95,10 @@ public class MapFragment extends Fragment {
      * This should only be called once and when we are sure that {@link #gMap}
      * is not null.
      */
-    private void setUpMap() {
+    private void setUpMap(GoogleMap map) {
+        gMap=map;
         // For showing a move to my loction button
-         gMap.setMyLocationEnabled(true);
+        gMap.setMyLocationEnabled(true);
         // For dropping a marker at a point on the Map
         gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("My Home").snippet("Home Address"));
         // For zooming automatically to the Dropped PIN Location
@@ -112,26 +120,36 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        Log.d(TAG,"onViewCreated()");
         // TODO Auto-generated method stub
         if (gMap != null)
-            setUpMap();
+            setUpMap(gMap);
 
         if (gMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            gMap = ((SupportMapFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.location_map)).getMap(); // getMap is deprecated
-            // Check if we were successful in obtaining the map.
+            ((SupportMapFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.location_map)).getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    Log.d(TAG,"onMapReady() #2");
+                    setUpMap(googleMap);
+                }
+            }); // getMap is deprecated
+ /*           // Check if we were successful in obtaining the map.
             if (gMap != null)
-                setUpMap();
+                setUpMap(gMap);
+                */
         }
     }
 
     /**** The mapfragment's id must be removed from the FragmentManager
      **** or else if the same it is passed on the next time then
      **** app will crash ****/
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d(TAG, "onDestroyView()");
         if (gMap != null) {
             getChildFragmentManager().beginTransaction()
                     .remove(getChildFragmentManager().findFragmentById(R.id.location_map)).commit();

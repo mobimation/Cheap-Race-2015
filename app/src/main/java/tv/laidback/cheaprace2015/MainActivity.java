@@ -1,8 +1,10 @@
 package tv.laidback.cheaprace2015;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
@@ -25,6 +27,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import tv.laidback.cheaprace2015.enteties.RaceLocation;
+import tv.laidback.cheaprace2015.enteties.Trip;
+import tv.laidback.cheaprace2015.sql.LocationDataSource;
+
 
 public class MainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
     /**
@@ -36,18 +42,22 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
+
+    private LocationDataSource locationDatasource;
+    private View tripDash;
+    private TextView tvDistanceCounter;
+    private TextView tvTimeCounter;
+    private ServiceConnection mConnection=null;
+
+    public static final int TABS = 4;
+
     private static final String TAG = MainActivity.class.getSimpleName();
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
 
-    /**
-     * Manage service interaction when UI rotates.
-     * Rotation causes the activity to die. So it is relaunched.
-     * When that happens it needs to reconnect to a running service.
-     * @return
-     */
+
     private ServiceConnection sc() {
         Log.i(TAG,"Instantiating ServiceConnection object");
         ServiceConnection sconn = new ServiceConnection() {
@@ -63,9 +73,9 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                         .getService();
                 mIsBound = true;
                 doBindService();
-                setupGui();  // Setup GUI that displays service progress
-                refreshDisplay(); // Added in version 40
-                btnStartRide.setVisibility(View.GONE);
+                setupGui();
+// TODO fix UI  refreshDisplay(); // Added in version 40
+// TODO fix UI  btnStartRide.setVisibility(View.GONE);
             }
 
             public void onServiceDisconnected(ComponentName className) {
@@ -83,6 +93,40 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             }
         };
         return sconn;
+    }
+
+    private void setupGui() {
+        // Show service UI
+        if (mIsBound) {  // If connected to service
+            tripDash.setVisibility(View.VISIBLE); // Show Ride UI elements
+
+            Trip currentTrip = mBoundService.getCurrentTrip();
+
+            tvDistanceCounter.setText(String.format("%.2f km",
+                    currentTrip.getDistance() / 1000));
+
+            // tvTimeCounter.setText(formatIntoHHMMSS(elapsedTime));
+
+            RaceLocation first = locationDatasource
+                    .getFirstLocation(currentTrip.getId());
+            RaceLocation last = locationDatasource.getLastLocation(currentTrip
+                    .getId());
+
+// TODO work on UI            compareFragment.update(currentTrip, first, last);
+
+// TODO work on UI            stats_wrapper.setVisibility(View.VISIBLE);
+
+// TODO work on UI            findViewById(R.id.welcome_laddbil).setVisibility(View.GONE);
+
+        } else { // uiState=1
+            // Show the vehicle selectors
+// TODO work on UI   vehicleSelectorUI.setVisibility(View.VISIBLE);
+// TODO work on UI   btnStartRide.setVisibility(View.VISIBLE); // Show Start
+
+            tripDash.setVisibility(View.GONE);  // Hide trip dash
+            tvTimeCounter.setText(formatIntoHHMMSS(0));
+            tvDistanceCounter.setText(String.format("%.2f km", 0f));
+        }
     }
 
     void doBindService() {
@@ -112,6 +156,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             setupGui();
         }
     }
+
 
     private LocalisationService mBoundService;
     private boolean mIsBound = false;
@@ -150,6 +195,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOnPageChangeListener(this);
+        // Number of tabs to keep off screen without destroying
+        mViewPager.setOffscreenPageLimit(TABS);
     }
 
 
@@ -186,7 +233,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
      */
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.d(TAG, "onPageScrolled()");
+        // Log.d(TAG, "onPageScrolled()");
     }
 
     /**
@@ -236,19 +283,21 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 case 0:
                     return TeamsFragment.newInstance(position+1);
                 case 1:
+                    // return TeamsFragment.newInstance(position+1);
                     return MapFragment.newInstance(position+1);
                 case 2:
-                     return WalkieTalkieFragment.newInstance(position+1);
+                    return WalkieTalkieFragment.newInstance(position+1);
                 case 3:
                     return ShareFragment.newInstance(position+1);
+                default:
+                    return null;
             }
-            return TeamsFragment.newInstance(position+1);
         }
 
         @Override
         public int getCount() {
             // Total pages.
-            return 4;
+            return TABS;
         }
 
         @Override
@@ -266,6 +315,22 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             }
             return null;
         }
+    }
+
+    /**
+     * Format a time value in milliseconds into a HH:MM:SS string value
+     * @param diff
+     * @return
+     */
+    public static String formatIntoHHMMSS(long diff) {
+        int diffInSec = (int) TimeUnit.MILLISECONDS.toSeconds(diff);
+
+        int hours = (int) diffInSec / 3600, remainder = (int) diffInSec % 3600, minutes = remainder / 60, seconds = remainder % 60;
+
+        return ((hours < 10 ? "0" : "") + hours + ":"
+                + (minutes < 10 ? "0" : "") + minutes + ":"
+                + (seconds < 10 ? "0" : "") + seconds);
+
     }
 
     /**

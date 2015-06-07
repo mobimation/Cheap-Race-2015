@@ -15,6 +15,5 @@
         android:id="@+id/cheapRaceLogo"
         android:layout_gravity="center_horizontal|top"
         android:src="@drawable/cheaprace_logo_portrait"
-        android:paddingTop="20dp"
-        android:contentDescription="@string/cheap_race_logo" />
+        android:paddingTop="20dp" />
 </FrameLayout>
