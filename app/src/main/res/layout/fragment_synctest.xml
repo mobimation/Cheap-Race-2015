@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="tv.laidback.cheaprace2015.TeamsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Sync Test"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:textSize="50sp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/headerSyncTest" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:id="@+id/buttonSyncTestStart"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_below="@+id/headerSyncTest"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:layout_marginTop="20sp" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/buttonSyncTestStart"
+        android:layout_marginTop="33dp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="70sp"
+        android:background="#fffcfffd"
+        android:progress="30" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="30 %"
+        android:id="@+id/percentage"
+        android:textAlignment="center"
+        android:layout_marginRight="17dp"
+        android:layout_alignBottom="@+id/progressBar"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="17dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Uploading.."
+        android:id="@+id/statusLine"
+        android:layout_below="@+id/buttonSyncTestStart"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

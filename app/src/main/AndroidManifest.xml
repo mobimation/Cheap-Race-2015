@@ -35,10 +35,6 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".SyncHubActivity"
-            android:label="@string/title_activity_sync_hub" >
-        </activity>
     </application>
 
 </manifest>
