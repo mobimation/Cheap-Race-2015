@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +37,7 @@ public class MapFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String TAG = MapFragment.class.getSimpleName();
+    private static final LatLng EASTBOURNE=new LatLng(50.780186,0.287187);
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -54,6 +57,31 @@ public class MapFragment extends Fragment {
         Log.d(TAG,"onCreateView()");
         // inflate and return the layout
         view = inflater.inflate(R.layout.fragment_map, container, false);
+        // Set up Default button
+        ImageView defaultButton=(ImageView)view.findViewById(R.id.cheapRaceLogo);
+        defaultButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setUpMap(gMap);
+            }
+        });
+
+        // Set up Home In button
+        ImageView homeButton=(ImageView)view.findViewById(R.id.buttonMapHome);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Zoom in on area that hold all teams
+                // TODO Add map action
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(EASTBOURNE)         // Sets the center of the map
+                        .zoom(17)                   // Sets the zoom
+                        .bearing(90)                // Sets the orientation of the camera to east
+                        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                Log.d(TAG, "Zoom in on us");
+            }
+        });
 
         // Eastbourne XJ Restorations
         latitude = 50.780186;

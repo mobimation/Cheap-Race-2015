@@ -7,13 +7,16 @@
         android:id="@+id/location_map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.google.android.gms.maps.SupportMapFragment" />
+        class="com.google.android.gms.maps.SupportMapFragment"
+        tools:layout="@layout/fragment_map3" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cheapRaceLogo"
-        android:layout_gravity="center_horizontal|top"
+        android:layout_gravity="center"
         android:src="@drawable/cheaprace_logo_portrait"
-        android:paddingTop="20dp" />
+        android:paddingTop="20dp"
+        android:contentDescription="@string/cheap_race_logo" />
+
 </FrameLayout>

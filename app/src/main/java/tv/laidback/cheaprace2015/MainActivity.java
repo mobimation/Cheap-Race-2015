@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private TextView tvTimeCounter;
     private ServiceConnection mConnection=null;
 
-    public static final int TABS = 4;
+    public static final int TABS = 2;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     /**
@@ -283,12 +283,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 case 0:
                     return TeamsFragment.newInstance(position+1);
                 case 1:
-                    // return TeamsFragment.newInstance(position+1);
                     return MapFragment.newInstance(position+1);
-                case 2:
-                    return WalkieTalkieFragment.newInstance(position+1);
-                case 3:
-                    return ShareFragment.newInstance(position+1);
                 default:
                     return null;
             }
@@ -307,11 +302,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 case 0:
                     return "TEAMS";
                 case 1:
-                    return "MAP";
-                case 2:
-                    return "Walkie Talkie";
-                case 3:
-                    return "Share";
+                    return "CHEAP RACE";
             }
             return null;
         }
@@ -332,38 +323,4 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 + (seconds < 10 ? "0" : "") + seconds);
 
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
- //   public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-  //      private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-   /*     public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-    } */
-
 }
