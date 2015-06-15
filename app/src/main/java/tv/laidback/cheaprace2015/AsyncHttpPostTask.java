@@ -66,15 +66,17 @@ public class AsyncHttpPostTask extends AsyncTask<File, Void, String> {
         }
         return null;
     }
+    /** TODO implement this
     private File getVideo() {
         File file = new File(context.getFilesDir() + File.separator + "linaanna.mp4");
         try {
-            InputStream inputStream = context.getResources().openRawResource(R.raw.linaanna);
+            // TODO fix valid movie InputStream inputStream = context.getResources().openRawResource(R.raw.linaanna);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 
             byte buf[]=new byte[1024];
             int len;
-            while((len=inputStream.read(buf))>0) {
+            InputStream is=new InputStream();
+            while((len=new InputStream.read(buf))>0) {
                 fileOutputStream.write(buf,0,len);
             }
 
@@ -83,5 +85,5 @@ public class AsyncHttpPostTask extends AsyncTask<File, Void, String> {
 
         } catch (IOException e1) {}
         return file;
-    }
+    } */
 }

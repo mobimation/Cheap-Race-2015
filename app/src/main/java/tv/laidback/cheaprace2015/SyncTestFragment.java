@@ -60,12 +60,6 @@ public class SyncTestFragment extends Fragment {
         // Connect a button that launch the transfer test as a thread
         Button defaultButton=(Button)v.findViewById(R.id.buttonSyncTestStart);
         parent=this;
-        defaultButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Handler syncHandler = new Handler();
-                syncHandler.post(retrieveJob);
-            }
-        });
         // Set up so we can run the progress bar
         progress = (ProgressBar)v.findViewById(R.id.progressBar);
         progress.setMax(100);
@@ -75,65 +69,12 @@ public class SyncTestFragment extends Fragment {
         // ..and the percentage indicator
         progressValue=(TextView)v.findViewById(R.id.statusLine);
         progressValue.setText("0 %");
+
+        defaultButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new AsyncTransferJob("192.168.0.187",progress,status,progressValue).execute();
+            }
+        });
         return v;
-    }
-
-    final Runnable retrieveJob = new Runnable() {
-        @Override
-        public void run() {
-            Log.d(TAG, "Transfer job begins");
-            testSFTP();
-        }
-    };
-
-    private void testSFTP() {
-        String PI_IP_ADDRESS="192.168.0.187";
-        int PI_FTPS_PORT=22;
-        FTPSClient ftps;
-        ftps = new FTPSClient(true);
-        try {
-            ftps.setFileType(FTP.BINARY_FILE_TYPE);
-            ftps.setTrustManager(null);
-            ftps.connect(PI_IP_ADDRESS,PI_FTPS_PORT);
-            int reply = ftps.getReplyCode();
-            if (!FTPReply.isPositiveCompletion(reply))
-            {
-                ftps.disconnect();
-                Log.d(TAG,"FTP server refused connection.");
-            }
-            else {
-                // Retrieve a video file over Wifi from Cheap Race 2015 Sync Server Hub
-                String filepath= Environment.getExternalStorageDirectory().getAbsolutePath();
-                OutputStream os = new FileOutputStream(filepath+"/localvideo.mp4");
-                // Navigate to repository
-                ftps.cwd("/home/pi/media/cheaprace/video");
-                // Retrieve sample video file
-                ftps.retrieveFile("Новости - YouTube.MP4", os);
-                // TODO Continue here
-                Log.d(TAG, "File transferred.");
-                parent.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                      progress.setProgress(99);
-                    }
-                });
-            }
-        }
-        catch(IOException ioe) {
-            Log.d(TAG, "IOException - " + ioe.getMessage());
-            if (ftps.isConnected())
-            {
-                try
-                {
-                    ftps.disconnect();
-                }
-                catch (IOException f)
-                {
-                    // do nothing
-                }
-            }
-            System.err.println("Could not connect to server.");
-        }
-
     }
 }

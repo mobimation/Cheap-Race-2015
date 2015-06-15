@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     private TextView tvTimeCounter;
     private ServiceConnection mConnection=null;
 
-    public static final int TABS = 2;
+    public static final int TABS = 3;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     /**
@@ -284,6 +284,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                     return TeamsFragment.newInstance(position+1);
                 case 1:
                     return MapFragment.newInstance(position+1);
+                case 2:
+                    return SyncTestFragment.newInstance(position+1);
                 default:
                     return null;
             }
@@ -303,6 +305,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                     return "TEAMS";
                 case 1:
                     return "CHEAP RACE";
+                case 2:
+                    return "SYNC TEST";
             }
             return null;
         }

@@ -11,6 +11,18 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            storeFile file("release")
+            storePassword "raxabaxa"
+            keyAlias "release"
+            keyPassword "raxabaxa"
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -25,4 +37,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.3.0'
     compile 'com.android.support:support-v4:22.1.1'
     compile 'commons-net:commons-net:3.3'
+    compile 'org.apache.ant:ant-jsch:1.9.4'
 }
