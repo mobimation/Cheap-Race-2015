@@ -1,15 +1,7 @@
 package tv.laidback.cheaprace2015;
-import com.jcraft.jsch.*;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-
-import org.apache.commons.net.PrintCommandListener;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.net.ftp.FTPSClient;
-
-import java.io.File;
 import java.io.IOException;
 
 
@@ -19,14 +11,20 @@ import java.io.IOException;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.vngx.jsch.Channel;
+import org.vngx.jsch.ChannelSftp;
+import org.vngx.jsch.JSch;
+import org.vngx.jsch.Session;
+import org.vngx.jsch.SftpProgressMonitor;
+import org.vngx.jsch.config.SessionConfig;
+
 import java.io.FileOutputStream;
 
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -66,13 +64,14 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
         statusLine.setText(result);
     }
 
-
+/*
     private String testSFTP() {
         String PI_IP_ADDRESS="192.168.0.187";
         int PI_FTPS_PORT=22;
 
+
         FTPSClient ftps;
-        ftps = new FTPSClient(false);
+        ftps = new FTPSClient(false); */
  /*       try {
             KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
@@ -92,7 +91,7 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
         //KeyManager keyManager = org.apache.commons.net.util.KeyManagerUtils.createClientKeyManager(new File(keystorePath), keystorePass);
         //KeyManagerFactory kmf = getInstance(KeyManagerFactory.getDefaultAlgorithm());
         // ftps.setDefaultTimeout(60 * 1000);
-        try {
+ /*       try {
             X509TrustManager easyTrustManager = new X509TrustManager() {
 
                 public void checkClientTrusted(X509Certificate[] chain,
@@ -160,47 +159,49 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
         }
         return "Failed";
     }
-
+*/
     private String testSFTP2() {
         String PI_IP_ADDRESS="192.168.0.187";
         int PI_FTPS_PORT=22;
-            JSch jsch = new JSch();
-            Session session = null;
+            JSch jsch = JSch.getInstance();
+            Session session;
             try {
-                session = jsch.getSession("pi", PI_IP_ADDRESS, PI_FTPS_PORT);
-                session.setConfig("StrictHostKeyChecking", "no");
-                session.setPassword("raxabaxa");
+                // Session createSession(String username, String host, int port, SessionConfig config) throws JSchException
+                session = jsch.createSession("pi", PI_IP_ADDRESS, PI_FTPS_PORT);
+                SessionConfig config = session.getConfig();
+                config.setProperty("StrictHostKeyChecking", "no");
+                // session.setConfig("StrictHostKeyChecking", "no");
                 publishProgress("Connecting..", null);
-                session.connect();
+                session.connect("raxabaxa".getBytes());
                 Channel channel = session.openChannel("sftp");
                 channel.connect();
                 ChannelSftp sftpChannel = (ChannelSftp) channel;
-                String dir=sftpChannel.lpwd();
+                String dir = sftpChannel.lpwd();
                 // sftpChannel.setPtyType("dumb");
                 sftpChannel.cd("/media/cheaprace/video");
-                Vector files=sftpChannel.ls("/media/cheaprace/video");
+                List files = sftpChannel.ls("/media/cheaprace/video");
                 publishProgress("Starts", null);
-                sftpChannel.get("video.mp4", Environment.getExternalStorageDirectory().getAbsolutePath()+"/video.mp4");
-//              sftpChannel.get("video.mp4",Environment.getExternalStorageDirectory().getAbsolutePath()+"/video.mp4",new SystemOutProgressMonitor());
-                publishProgress("Done.",null);
+                sftpChannel.get("video.mp4", Environment.getExternalStorageDirectory().getAbsolutePath() + "/video.mp4");
+//              sftpChannel.get("video.mp4",Environment.getExternalStorageDirectory().getAbsolutePath()+"/video.mp4",new ProgressMonitor());
+                publishProgress("Done.", null);
                 sftpChannel.exit();
                 session.disconnect();
-            } catch (JSchException e) {
-                e.printStackTrace();
-            } catch (SftpException e) {
+            } catch ( org.vngx.jsch.exception.JSchException je) {
+                je.printStackTrace();
+            } catch (org.vngx.jsch.exception.SftpException e) {
                 e.printStackTrace();
             }
     return "ok";
     }
-    class SystemOutProgressMonitor implements SftpProgressMonitor
+    class ProgressMonitor implements SftpProgressMonitor
     {
         long n=0;
         long total=0;
-        public SystemOutProgressMonitor() {;}
+        public ProgressMonitor() {;}
 
         public void init(int op, java.lang.String src, java.lang.String dest, long max)
         {
-            publishProgress("Started",null);
+            publishProgress("Started", null);
         }
 
         public boolean count(long bytes)
