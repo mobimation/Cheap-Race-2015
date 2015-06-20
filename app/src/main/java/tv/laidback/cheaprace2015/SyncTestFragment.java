@@ -1,26 +1,13 @@
 package tv.laidback.cheaprace2015;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.os.Handler;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.net.ftp.FTPSClient;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +59,7 @@ public class SyncTestFragment extends Fragment {
 
         defaultButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new AsyncTransferJob("192.168.0.187",progress,status,progressValue).execute();
+                new AsyncTransferJob(getActivity().getBaseContext(),"192.168.0.187",progress,status,progressValue).execute();
             }
         });
         return v;

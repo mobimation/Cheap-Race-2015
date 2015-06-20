@@ -1,4 +1,13 @@
 package tv.laidback.cheaprace2015;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -31,17 +40,21 @@ import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.X509TrustManager;
 
 /**
- * Transfer files to/from a Secure FTP server in an asynchronous way.
+ * Transfer files to/from Secure FTP server in an asynchronous way.
  */
 public class AsyncTransferJob extends AsyncTask<View, String, String> {
-
+    final String PI_IP_ADDRESS="192.168.1.106";         // Pi IP address assigned by Wifi router
+    final String HUB_SSID = "Cheap Race 2015 Sync Hub"; // SSID of Wifi router
+    final int PI_SFTP_PORT=22;                          // Pi SFTP server port
     private static final String TAG = AsyncTransferJob.class.getSimpleName();
     private String ftpServer;
     private ProgressBar progressBar;
     private TextView statusLine;
     private TextView progressValue;
+    private Context context;
 
-    public AsyncTransferJob(final String server, View... ui) {
+    public AsyncTransferJob(Context context, final String server, View... ui) {
+        this.context=context;
         ftpServer = server;
         progressBar=(ProgressBar)ui[0];
         statusLine=(TextView)ui[1];
@@ -64,110 +77,95 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
         statusLine.setText(result);
     }
 
-/*
-    private String testSFTP() {
-        String PI_IP_ADDRESS="192.168.0.187";
-        int PI_FTPS_PORT=22;
+    /**
+     * Return info about the connected WiFi network if any
+     * @param context
+     * @return null = no Wifi network connected or
+     * WifiInfo about the connected Wifi network
+     */
+    private WifiInfo getConnectedWifi(Context context) {
+        WifiInfo connectionInfo=null;
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-
-        FTPSClient ftps;
-        ftps = new FTPSClient(false); */
- /*       try {
-            KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-            keyStore.load(null);
-            Enumeration<String> aliases=keyStore.aliases();
-
-            Log.d(TAG,"----CERTIFICATES------");
-            while (aliases.hasMoreElements())
-                Log.d(TAG,aliases.nextElement());
-            Log.d(TAG, "----------------------");
+        NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (networkInfo.isConnected()) {
+            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            connectionInfo = wifiManager.getConnectionInfo();
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
-
-        // ftps.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
-        //KeyManager keyManager = org.apache.commons.net.util.KeyManagerUtils.createClientKeyManager(new File(keystorePath), keystorePass);
-        //KeyManagerFactory kmf = getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        // ftps.setDefaultTimeout(60 * 1000);
- /*       try {
-            X509TrustManager easyTrustManager = new X509TrustManager() {
-
-                public void checkClientTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {
-                    // Oh, I am easy!
-                }
-
-                public void checkServerTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {
-                    // Oh, I am easy!
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-            };
-            ftps.setTrustManager(easyTrustManager);
-
-            ftps.connect(PI_IP_ADDRESS, PI_FTPS_PORT);
-            int reply = ftps.getReplyCode();
-            if (!FTPReply.isPositiveCompletion(reply))
-            {
-                ftps.disconnect();
-                Log.d(TAG,"FTP server refused connection.");
-            }
-            else {
-                if (!ftps.login("pi", "raxabaxa")) {
-                    Log.e(TAG,"Login failed");
-                    ftps.logout();
-                }
-                else {
-                    ftps.setFileType(FTP.BINARY_FILE_TYPE);
-                    // Retrieve a video file over Wifi from Cheap Race 2015 Sync Server Hub
-                    String filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                    OutputStream os = new FileOutputStream(filepath + "/localvideo.mp4");
-                    // Navigate to repository
-                    ftps.cwd("/home/pi/media/cheaprace/video");
-                    // Retrieve sample video file
-                    ftps.retrieveFile("Новости - YouTube.MP4", os);
-                    // TODO Continue here
-                    onProgressUpdate("100","Transfer done.");
-                    Log.d(TAG, "File transferred.");
-                    return "Success";
-                }
-            }
-        }
-        catch(SSLHandshakeException she) {
-            Log.d(TAG, "SSLHandshakeException - " + she.getMessage());
-        }
-        catch(IOException ioe) {
-            Log.d(TAG, "IOException - " + ioe.getMessage());
-            if (ftps.isConnected())
-            {
-                try
-                {
-                    ftps.disconnect();
-                }
-                catch (IOException f)
-                {
-                    // do nothing
-                }
-            }
-            System.err.println("Could not connect to server.");
-        }
-        return "Failed";
+        return connectionInfo;
     }
-*/
+
+    /**
+     * Check if the Cheap Race 2015 Sync Hub Wifi is detected by the device.
+     * This should be polled periodically to allow spontaneous sync or run if a user
+     * initiates a sync manually.
+     * @param context
+     * @return list of networks or null if no Wifi detected
+     */
+    private boolean cheapRaceWifiPresent(Context context) {
+        final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        List<ScanResult> results = wifiManager.getScanResults();
+        ScanResult bestSignal = null;
+        int count = 1;
+        String etWifiList = "";
+        for (ScanResult result : results) {
+            if (result.SSID.equals("Cheap Race 2015 Sync Hub")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Wifi Manager scan result receiver code
+     *
+     */
+     private void scanReceive() {
+         IntentFilter i = new IntentFilter();
+         i.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+         context.registerReceiver(new BroadcastReceiver() {
+             public void onReceive(Context c, Intent i) {
+                 // Code to execute when SCAN_RESULTS_AVAILABLE_ACTION event occurs
+                 WifiManager w = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+                 scanResultHandler(w.getScanResults()); // your method to handle Scan results
+             //    if (ScanAsFastAsPossible) w.startScan(); // relaunch scan immediately
+             //    else { /* Schedule the scan to be run later here */}
+             }
+         }, i);
+     }
+
+     private void scanResultHandler(List<ScanResult> results) {
+
+     }
+
+    // Launch  wifiscanner the first time here (it will call the broadcast receiver above)
+    WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    boolean a = wm.startScan();
+
+    /**
+     * Attempt to change Wifi connectivity over to the Sync Hub router
+     * Keep note of any existing Wifi connection so it can be restored when sync done.
+     */
+    private boolean connectHub() {
+        WifiInfo currentWifi = getConnectedWifi(context); // Keep note of any existing Wifi connection
+        if (currentWifi!=null)
+            if (!currentWifi.getSSID().equals(HUB_SSID)) {
+                // Device connected to Wifi and it´s not the hub
+                // Preserve connection info for later restore and change to hub Wifi
+                final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                // TODO implement......
+            }
+        return true;
+    }
+
     private String testSFTP2() {
-        String PI_IP_ADDRESS="192.168.0.187";
-        int PI_FTPS_PORT=22;
+   //     String PI_IP_ADDRESS="192.168.0.187";
             JSch jsch = JSch.getInstance();
             Session session;
+
             try {
                 // Session createSession(String username, String host, int port, SessionConfig config) throws JSchException
-                session = jsch.createSession("pi", PI_IP_ADDRESS, PI_FTPS_PORT);
+                session = jsch.createSession("pi", PI_IP_ADDRESS, PI_SFTP_PORT);
                 SessionConfig config = session.getConfig();
                 config.setProperty("StrictHostKeyChecking", "no");
                 // session.setConfig("StrictHostKeyChecking", "no");
@@ -219,6 +217,17 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
         public void end()
         {
             publishProgress("FINISHED!",null);
+        }
+    }
+
+    /**
+     *  Maintain awareness of connectivity changes
+     */
+    public static class ConnectivityChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent){
+            // TODO implement actions upon connectivity change
         }
     }
 }

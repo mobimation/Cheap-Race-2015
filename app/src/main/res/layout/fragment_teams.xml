@@ -14,4 +14,12 @@
         android:textSize="50sp"
         android:id="@+id/textView" />
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/serviceMessage"
+        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="center_horizontal" />
+
 </FrameLayout>

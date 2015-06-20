@@ -3,8 +3,11 @@ package tv.laidback.cheaprace2015;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
@@ -197,6 +200,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         mViewPager.setOnPageChangeListener(this);
         // Number of tabs to keep off screen without destroying
         mViewPager.setOffscreenPageLimit(TABS);
+        Intent svc = new Intent(MainActivity.this, SyncService.class);
+        MainActivity.this.startService(svc);
     }
 
 
