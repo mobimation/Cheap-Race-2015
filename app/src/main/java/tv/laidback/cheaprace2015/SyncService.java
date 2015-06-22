@@ -108,7 +108,7 @@ public class SyncService extends Service {
 
         // TODO Implement service communication interface
 
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent().setAction("ping").putExtra("Greeting", "Service Running"));
+        LocalBroadcastManager.getInstance(this.getApplicationContext()).sendBroadcast(new Intent().setAction("ping").putExtra("Greeting", "Service Running"));
         /*
         Intent contentIntent = new Intent(this, MainActivity.class);
         contentIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -128,6 +128,7 @@ public class SyncService extends Service {
     private void updateNotification() {
         Log.d(TAG,"Sync, updating UI..");
         setElapsedTime(getElapsedTime()+TIMER_INTERVAL);  // Increment time
+        showNotification();
 
         // Experimental, simple test of stopping
 //        if (getElapsedTime()>4000)

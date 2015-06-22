@@ -17,6 +17,21 @@ import android.widget.TextView;
  * A simple {@link Fragment} subclass.
  */
 public class TeamsFragment extends Fragment {
+    TextView serviceMessage=null;
+    LocalBroadcastManager lbm=null;
+    final IntentFilter filter=new IntentFilter();
+    int count=0;
+
+    final BroadcastReceiver updateUIReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("ping"))
+                if (intent.hasExtra("Greeting"))
+                    if (serviceMessage!=null)
+                      serviceMessage.setText(intent.getStringExtra("Greeting ")+""+count++);
+        }
+    };
+
     private static View view;
     /**
      * The fragment argument representing the section number for this
@@ -41,23 +56,25 @@ public class TeamsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        LocalBroadcastManager lbm=LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(updateUIReceiver, filter);
+        super.onResume();
+    }
+    @Override
+    public void onPause() {
+        lbm.unregisterReceiver(updateUIReceiver);
+        super.onPause();
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_teams, container, false);
-        IntentFilter filter=new IntentFilter();
         filter.addAction("ping");
-        final TextView serviceMessage=(TextView)view.findViewById(R.id.serviceMessage);
+        serviceMessage=(TextView)view.findViewById(R.id.serviceMessage);
 
-        BroadcastReceiver updateUIReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.equals("ping"))
-                    if (intent.hasExtra("greeting")) {
-                        serviceMessage.setText(intent.getStringExtra("greeting"));
-                    }
-            }
-        };
-        LocalBroadcastManager.getInstance(getActivity().getBaseContext()).registerReceiver(updateUIReceiver, filter);
+        // LocalBroadcastManager.getInstance(getActivity().getBaseContext()).registerReceiver(updateUIReceiver, filter);
+
         return view;
     }
 }
