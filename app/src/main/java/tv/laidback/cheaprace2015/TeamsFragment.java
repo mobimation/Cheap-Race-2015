@@ -18,8 +18,7 @@ import android.widget.TextView;
  */
 public class TeamsFragment extends Fragment {
     TextView serviceMessage=null;
-    LocalBroadcastManager lbm=null;
-    final IntentFilter filter=new IntentFilter();
+    final LocalBroadcastManager lbm=LocalBroadcastManager.getInstance(getActivity());
     int count=0;
 
     final BroadcastReceiver updateUIReceiver = new BroadcastReceiver() {
@@ -57,8 +56,7 @@ public class TeamsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        LocalBroadcastManager lbm=LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(updateUIReceiver, filter);
+        lbm.registerReceiver(updateUIReceiver, new IntentFilter("ping"));
         super.onResume();
     }
     @Override
@@ -70,7 +68,6 @@ public class TeamsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_teams, container, false);
-        filter.addAction("ping");
         serviceMessage=(TextView)view.findViewById(R.id.serviceMessage);
 
         // LocalBroadcastManager.getInstance(getActivity().getBaseContext()).registerReceiver(updateUIReceiver, filter);
