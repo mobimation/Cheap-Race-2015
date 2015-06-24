@@ -42,7 +42,8 @@ public class SyncService extends Service {
     private long wifiMonitoringElapsedTime;
     private long wifiScanStartTime;
     private long wifiScanDuration;
-    private static final String HUB_SSID="Cheap Race 2015 Sync Hub";
+    // private static final String HUB_SSID="Cheap Race 2015 Sync Hub";
+    private static final String HUB_SSID="Solna003";
     private static long WIFI_POLL_START_TIME = 0;
     private static final int WIFI_POLL_INTERVAL = 30000; // Once per 30 seconds
     private boolean proximity=false;
@@ -147,19 +148,45 @@ public class SyncService extends Service {
     /**
      * Scan for Cheap Race 2015 Sync Hub Wifi within range
      */
+/*
+    NetworkInfo wifiInfo = _androidConnectivityMgr.GetNetworkInfo(ConnectivityType.Wifi);
+    if (!wifiInfo.IsConnectedOrConnecting)
+    {
+        // Need to make sure the CPU does not go to sleep before the following async calls are finished
+        _wifiScanWakeLock.Acquire();
+
+        // Do not wait for the OS to initiate a reconnect to a Wi-Fi router
+        _wifiManager.StartScan();
+    }
+*/
+
     private void proximityCheck() {
         // TODO Implement Wifi proximity scan
-        String connected=getCurrentSsid(getApplicationContext());
+        WifiManager.WifiLock _wifiLock = null;
+        WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        boolean failedToConnect = true;
+        if (wm != null && wm.isWifiEnabled()) {// Don't want to enable it myself
+            _wifiLock = wm.createWifiLock(0x3, this.getClass().getName() + ".WIFI_LOCK");
+            _wifiLock.acquire();
+        }
+
+        WifiInfo wifiInfo=getConnectedWifi(getApplicationContext());
+        if (wifiInfo!=null) {
+            // TODO Save info about any connected Wifi network
+        }
+        String connected=getCurrentSsid(getApplicationContext());  // Test for now
+
         // Launch  wifiscanner the first time here (it will call the broadcast receiver above)
-        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wim = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiScanStartTime=System.currentTimeMillis();
-        boolean a = wm.startScan();
+        boolean a = wim.startScan();
 
         Log.d(TAG,"Checking for Sync Hub Wifi proximity");
 
         wifiMonitoringElapsedTime = System.currentTimeMillis()-WIFI_POLL_START_TIME;
 
-        showNotification();
+        showNotification(); // Show report of this scan
+        _wifiLock.release();
     }
 
     /**
