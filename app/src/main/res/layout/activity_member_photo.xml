@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="tv.laidback.cheaprace2015.teams.member.MemberPhoto"
+    android:background="#045242">
+
+    <TextView android:text="Namn Team" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/teamName"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:phoneNumber="true"
+        android:textColor="@color/eck_white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/memberName"
+        android:layout_below="@+id/teamName"
+        android:layout_centerHorizontal="true"
+        android:textSize="25sp"
+        android:layout_marginTop="10dp"
+        android:text="Namn team-medlem"
+        android:textColor="@color/eck_white" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:src="@drawable/icon_user_editable_green"
+        android:scaleType="fitCenter"
+        android:layout_below="@+id/memberName"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="false"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:focusable="false" />
+
+</RelativeLayout>

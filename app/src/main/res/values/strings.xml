@@ -15,4 +15,9 @@
     <string name="title_activity_main_activity2">MainActivity2</string>
     <string name="title_activity_sync_hub">SyncHubActivity</string>
     <string name="cheap_race_logo">Cheap Race logo</string>
+    <string name="title_activity_member_photo_shoot">MemberPhotoShoot</string>
+    <string name="title_activity_member_photo">MemberPhoto</string>
+    <string name="title_activity_member_about">MemberAbout</string>
+    <string name="title_activity_member_video_capture">MemberVideoCapture</string>
+    <string name="title_activity_members">MembersActivity</string>
 </resources>

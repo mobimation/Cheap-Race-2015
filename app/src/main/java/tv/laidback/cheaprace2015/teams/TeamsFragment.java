@@ -4,15 +4,27 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.internal.widget.AdapterViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tv.laidback.cheaprace2015.R;
+import tv.laidback.cheaprace2015.teams.member.MemberPhotoCapture;
+import tv.laidback.cheaprace2015.teams.member.MembersActivity;
 
 
 /**
@@ -23,6 +35,9 @@ public class TeamsFragment extends Fragment {
      * teams represent an index 0..29 of the competing teams.
      * Each team consists of members which are accessible through the index.
      */
+
+    private final String TAG = getClass().getSimpleName();
+
     private class Team {
         String teamName;
         String[] members;
@@ -324,6 +339,27 @@ public class TeamsFragment extends Fragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_teams, container, false);
         serviceMessage=(TextView)view.findViewById(R.id.serviceMessage);
+        ListView teamsList=(ListView)view.findViewById(R.id.teamsList);
+        ArrayList<String> listItems=new ArrayList<String>();
+        ArrayAdapter<String>adapter;
+        for (int n=0; n<teams.length; n++)
+            listItems.add(n,teams[n].teamName);
+        adapter=new ArrayAdapter<String>(this.getActivity(),
+                android.R.layout.simple_list_item_1,
+                listItems);
+        teamsList.setAdapter(adapter);
+        teamsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Team teamInfo=teams[position];
+                Log.d(TAG, "Team="+teamInfo.teamName+" is "+position);
+                // Launch team list activity with data
+                Intent i=new Intent(getActivity().getApplicationContext(),MembersActivity.class);
+                i.putExtra("team", teamInfo.teamName);
+                i.putExtra("members",teamInfo.members);
+                getActivity().getApplicationContext().startActivity(i);
+            }
+        });
 
         // LocalBroadcastManager.getInstance(getActivity().getBaseContext()).registerReceiver(updateUIReceiver, filter);
 
