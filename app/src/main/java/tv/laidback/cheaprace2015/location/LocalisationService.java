@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.location;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import tv.laidback.cheaprace2015.MainActivity;
+import tv.laidback.cheaprace2015.R;
+import tv.laidback.cheaprace2015.compatibility.TripCalculator;
 import tv.laidback.cheaprace2015.enteties.RaceLocation;
 import tv.laidback.cheaprace2015.enteties.Trip;
 import tv.laidback.cheaprace2015.sql.LocationDataSource;
@@ -26,7 +29,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.media.Ringtone;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,7 +52,7 @@ public class LocalisationService extends Service implements LocationListener {
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // in meters
 
 	// The minimum time between updates in milliseconds
-	public static final long MIN_TIME_BW_UPDATES = 1000 * 5 * 1; // in
+	public static final long MIN_TIME_BW_UPDATES = 1000 * 5; // in
 																	// milliseconds
 
 	// Unique Identification Number for the Notification.
@@ -79,7 +81,7 @@ public class LocalisationService extends Service implements LocationListener {
 	private TripDataSource tripDatasource;
 	private LocationDataSource locationDatasource;
 	private Trip trip;
-	private MockLocationProvider mp=null; 
+	private MockLocationProvider mp=null;
 	/**
 	 * ride and compare holds the vehicle types of the
 	 * driven car type and the one to compare with.
@@ -183,7 +185,6 @@ public class LocalisationService extends Service implements LocationListener {
 		} else {
 			removeCurrentTrip();
 		}
-		trip = null;
 
 		timeHandler.removeCallbacks(timerRunnable);
 		setElapsedTime(0);
@@ -283,7 +284,7 @@ public class LocalisationService extends Service implements LocationListener {
 			        List data = new ArrayList();
 			        InputStream is = getAssets().open("trip.txt");
 			        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			        String line = null;
+			        String line;
 			        while ((line = reader.readLine()) != null) {
 
 			            data.add(line);
@@ -525,8 +526,8 @@ public class LocalisationService extends Service implements LocationListener {
 			firstSavedPosition = created;
 		}
 
-		Number distanceSinceLastLocation = 0;
-		Number tripTime = 0;
+		Number distanceSinceLastLocation;
+		Number tripTime;
 		if (lastSavedPosition != null) {
 			distanceSinceLastLocation = TripCalculator.calculateDistanceOfLocations(lastSavedPosition, created);
 			tripTime = created.getTimestamp().getTime() - firstSavedPosition.getTimestamp().getTime();

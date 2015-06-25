@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.teams;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import tv.laidback.cheaprace2015.R;
 
 
 /**
@@ -34,7 +36,7 @@ public class TeamsFragment extends Fragment {
     /**
      * Instantiate teams and their members
      */
-    public void TeamsFragment() {
+    public TeamsFragment() {
         teams[0]=new Team("4GOM",members_4_GOM);
         teams[1]=new Team("Larborn/Svendsen",members_Larborn_Svendsen);
         teams[2]=new Team("Doherty",members_Doherty);
@@ -236,36 +238,36 @@ public class TeamsFragment extends Fragment {
      */
     public String[] getTeams() {
         String[]teamName=new String[teams.length];
-        for (int x=0; x < teams.length; x++) {
-            teamName[x]=new String((teams[x].teamName));
-        }
+        for (int x=0; x < teams.length; x++)
+            teamName[x]=teams[x].teamName;
+
         return teamName;
     }
 
     /**
      * Get members of a team
-     * @param team
+     * @param team Name of team
      * @return Team = String array of member names
      */
     public Team getMembers(String team) {
-        for (int x=0; x < teams.length; x++) {
-            if (teams[x].teamName.equals(team))
-                return teams[x];
-        }
+        for (Team t : teams)
+            if (t.teamName.equals(team))
+                return t;
+
         return null;
     }
 
     /**
      * Get name of team that a member belongs to
-     * @param member
+     * @param member Name of member
      * @return team (null=unknown member)
      */
     public String getTeam(String member) {
-        for (int n2=0; n2<teams.length; n2++) {
-            String[]members=teams[n2].members;
-            for (int n3=0; n3<members.length; n3++)
+        for (Team team : teams) {
+            String[] members = team.members;
+            for (int n3 = 0; n3 < members.length; n3++)
                 if (members[n3].equals(member))
-                    return teams[n2].teamName;
+                    return team.teamName;
         }
         return null;
     }
@@ -302,11 +304,11 @@ public class TeamsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+/*
     public TeamsFragment() {
         // Required empty public constructor
     }
-
+*/
     @Override
     public void onResume() {
         lbm.registerReceiver(updateUIReceiver, new IntentFilter("ping"));

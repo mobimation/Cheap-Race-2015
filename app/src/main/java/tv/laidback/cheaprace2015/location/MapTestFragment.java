@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.location;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +15,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import tv.laidback.cheaprace2015.R;
 
 /**
  * A fragment that launches a Google Maps view
@@ -188,9 +190,9 @@ public class MapTestFragment extends Fragment {
      * Calculate the URL for an OpenStreetMap tile based on coordinates and zoom factor
      * ( from http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#X_and_Y )
      *
-     * @param lat
-     * @param lon
-     * @param zoom
+     * @param lat Latitude
+     * @param lon Longitude
+     * @param zoom Zoom factor
      * @return partial URL string
      */
     public static String getTileNumber(final double lat, final double lon, final int zoom) {

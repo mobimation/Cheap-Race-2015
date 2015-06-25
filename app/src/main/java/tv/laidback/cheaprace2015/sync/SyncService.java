@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.sync;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -130,7 +130,7 @@ public class SyncService extends Service {
      * Return a current SSID if any. If empty it means the device does not currently have an active
      * Wifi connection.
      * @param context
-     * @return
+     * @return SSID string or null if none
      */
     public static String getCurrentSsid(Context context) {
         String ssid = null;
@@ -186,7 +186,8 @@ public class SyncService extends Service {
         wifiMonitoringElapsedTime = System.currentTimeMillis()-WIFI_POLL_START_TIME;
 
         showNotification(); // Show report of this scan
-        _wifiLock.release();
+        if (_wifiLock!=null)
+            _wifiLock.release();
     }
 
     /**
@@ -211,7 +212,7 @@ public class SyncService extends Service {
 
     /**
      * Check if the Cheap Race 2015 Sync Hub Wifi router is in list of detected Wifi networks
-     * @param results
+     * @param results List of networks from a scan
      */
     private void scanResultHandler(List<ScanResult> results) {
         // loop that goes through list
@@ -242,7 +243,7 @@ public class SyncService extends Service {
 
     /**
      * Return info about the connected WiFi network if any
-     * @param context
+     * @param context  Application context
      * @return null = no Wifi network connected or
      * WifiInfo about the connected Wifi network
      */

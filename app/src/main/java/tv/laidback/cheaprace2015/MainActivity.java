@@ -3,36 +3,32 @@ package tv.laidback.cheaprace2015;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import tv.laidback.cheaprace2015.enteties.RaceLocation;
 import tv.laidback.cheaprace2015.enteties.Trip;
+import tv.laidback.cheaprace2015.location.LocalisationService;
+import tv.laidback.cheaprace2015.location.MapFragment;
 import tv.laidback.cheaprace2015.sql.LocationDataSource;
+import tv.laidback.cheaprace2015.sync.SyncService;
+import tv.laidback.cheaprace2015.sync.SyncTestFragment;
+import tv.laidback.cheaprace2015.teams.TeamsFragment;
 
 
 public class MainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
@@ -286,11 +282,11 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             // The sliding pages and their positions:
             switch (position) {
                 case 0:
-                    return TeamsFragment.newInstance(position+1);
+                    return TeamsFragment.newInstance(position + 1);
                 case 1:
-                    return MapFragment.newInstance(position+1);
+                    return MapFragment.newInstance(position + 1);
                 case 2:
-                    return SyncTestFragment.newInstance(position+1);
+                    return SyncTestFragment.newInstance(position + 1);
                 default:
                     return null;
             }
@@ -319,13 +315,13 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
 
     /**
      * Format a time value in milliseconds into a HH:MM:SS string value
-     * @param diff
-     * @return
+     * @param diff  Time value in milliseconds
+     * @return Formatted string HH:MM:SS
      */
     public static String formatIntoHHMMSS(long diff) {
         int diffInSec = (int) TimeUnit.MILLISECONDS.toSeconds(diff);
 
-        int hours = (int) diffInSec / 3600, remainder = (int) diffInSec % 3600, minutes = remainder / 60, seconds = remainder % 60;
+        int hours = diffInSec / 3600, remainder = diffInSec % 3600, minutes = remainder / 60, seconds = remainder % 60;
 
         return ((hours < 10 ? "0" : "") + hours + ":"
                 + (minutes < 10 ? "0" : "") + minutes + ":"

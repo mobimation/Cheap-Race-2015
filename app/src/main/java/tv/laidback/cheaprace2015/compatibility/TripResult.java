@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.compatibility;
 // Holds the result data of a trip
 public class TripResult {
 	public double fuel_a = 0;

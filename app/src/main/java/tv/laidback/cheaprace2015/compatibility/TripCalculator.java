@@ -1,10 +1,8 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.compatibility;
 
 import java.util.List;
 
 import tv.laidback.cheaprace2015.MainActivity;
-import tv.laidback.cheaprace2015.enteties.RaceLocation;
-import tv.laidback.cheaprace2015.enteties.Trip;
 import tv.laidback.cheaprace2015.enteties.RaceLocation;
 
 import android.location.Location;
@@ -16,10 +14,9 @@ public class TripCalculator {
 	public static double calculateAveragespeed(double currentTripLengthInMeters, double timeInMilli) {
 
 		double km = currentTripLengthInMeters / 1000;
-		double hours = ((double) timeInMilli / 1000) / 3600;
+		double hours = (timeInMilli / 1000) / 3600;
 		if (km > 0 && hours > 0) {
-			double x = (km / hours);
-			return x;
+			return (km / hours);
 		}
 		return 0;
 	}
@@ -142,7 +139,7 @@ public class TripCalculator {
 	}
 
 	public static double calculateDistanceOfLocations(RaceLocation a, RaceLocation locationInfo) {
-		float meters = 0f;
+		float meters;
 
 		Location aLocation = new Location("");
 		aLocation.setLatitude(a.getLatitude());
@@ -170,10 +167,7 @@ public class TripCalculator {
 			RaceLocation first = locations.get(0);
 			RaceLocation last = locations.get(locations.size() - 1);
 
-			float timeInMilli = last.getTimestamp().getTime() - first.getTimestamp().getTime();
-
-			return timeInMilli;
-
+			return last.getTimestamp().getTime() - first.getTimestamp().getTime();
 		}
 		return 0;
 	}

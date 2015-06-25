@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.transfer;
 
 import android.content.Context;
 import android.net.http.AndroidHttpClient;
@@ -13,9 +13,7 @@ import org.apache.http.entity.FileEntity;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -50,19 +48,21 @@ public class AsyncHttpPostTask extends AsyncTask<File, Void, String> {
                 while ((line = rd.readLine()) != null) {
                     out.append(line);
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.e(TAG,"Exception "+e.getMessage());
+            }
             // wr.close();
             try {
                 rd.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG,"IOException1 "+e.getMessage());
             }
             // final String serverResponse = slurp(is);
             Log.d(TAG, "serverResponse: " + out.toString());
         } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            Log.e(TAG, "ClientProtocolException " + e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "IOException2 " + e.getMessage());
         }
         return null;
     }

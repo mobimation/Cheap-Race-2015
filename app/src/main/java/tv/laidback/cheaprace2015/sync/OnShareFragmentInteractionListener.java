@@ -1,8 +1,8 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.sync;
 
 /**
  * Created by gunnarforsgren on 15-05-26.
  */
 public interface OnShareFragmentInteractionListener {
-    public void onFragmentInteraction(String string);
+    void onFragmentInteraction(String string);
 }

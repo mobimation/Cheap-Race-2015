@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.sync;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import tv.laidback.cheaprace2015.R;
+import tv.laidback.cheaprace2015.transfer.AsyncTransferJob;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.transfer;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import java.io.IOException;
 
 
 /**
@@ -28,16 +27,7 @@ import org.vngx.jsch.Session;
 import org.vngx.jsch.SftpProgressMonitor;
 import org.vngx.jsch.config.SessionConfig;
 
-import java.io.FileOutputStream;
-
-import java.io.OutputStream;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.List;
-import java.util.Vector;
-
-import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * Transfer files to/from Secure FTP server in an asynchronous way.
@@ -195,7 +185,7 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
     {
         long n=0;
         long total=0;
-        public ProgressMonitor() {;}
+        public ProgressMonitor() {}
 
         public void init(int op, java.lang.String src, java.lang.String dest, long max)
         {

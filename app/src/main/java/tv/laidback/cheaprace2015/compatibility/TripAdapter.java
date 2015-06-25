@@ -1,10 +1,11 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.compatibility;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import tv.laidback.cheaprace2015.R;
 import tv.laidback.cheaprace2015.enteties.Trip;
 import tv.laidback.cheaprace2015.sql.TripDataSource;
 import android.app.Activity;
@@ -27,7 +28,7 @@ public class TripAdapter extends BaseAdapter {
 	private tv.laidback.cheaprace2015.sql.TripDataSource tripDatasource;
 	// private LocationDataSource locationDatasource;
 	private Number count = null;
-	SparseArray<Trip> trips = new SparseArray<Trip>();
+	SparseArray<Trip> trips = new SparseArray<>();
 
 	public TripAdapter(Context context, int layoutResourceId, TripDataSource tripDatasource) {
 		super();
@@ -44,7 +45,7 @@ public class TripAdapter extends BaseAdapter {
 	@Override
 	public void notifyDataSetChanged() {
 		count = null;
-		trips = new SparseArray<Trip>();
+		trips = new SparseArray<>();
 		super.notifyDataSetChanged();
 	}
 
@@ -85,7 +86,7 @@ public class TripAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = convertView;
-		MainObjectHolder holder = null;
+		MainObjectHolder holder;
 
 		if (row == null) {
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -154,7 +155,7 @@ public class TripAdapter extends BaseAdapter {
 	public static String formatIntoHHMMSS(double diff) {
 		int diffInSec = (int) diff;
 
-		int hours = (int) diffInSec / 3600, remainder = (int) diffInSec % 3600, minutes = remainder / 60, seconds = remainder % 60;
+		int hours = diffInSec / 3600, remainder = diffInSec % 3600, minutes = remainder / 60, seconds = remainder % 60;
 
 		return ((hours > 0 ? hours + "h " : "") + (minutes > 0 ? minutes + "m " : "") + seconds + "s");
 

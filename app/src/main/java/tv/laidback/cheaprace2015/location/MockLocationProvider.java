@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.location;
 
 import java.io.IOException;
 import java.util.Iterator;

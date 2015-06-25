@@ -1,4 +1,4 @@
-package tv.laidback.cheaprace2015;
+package tv.laidback.cheaprace2015.transfer;
 
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
