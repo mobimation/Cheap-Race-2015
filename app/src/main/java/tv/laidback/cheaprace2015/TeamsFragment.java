@@ -231,6 +231,18 @@ public class TeamsFragment extends Fragment {
     };
 
     /**
+     * Return array of team names
+     * @return string array
+     */
+    public String[] getTeams() {
+        String[]teamName=new String[teams.length];
+        for (int x=0; x < teams.length; x++) {
+            teamName[x]=new String((teams[x].teamName));
+        }
+        return teamName;
+    }
+
+    /**
      * Get members of a team
      * @param team
      * @return Team = String array of member names
