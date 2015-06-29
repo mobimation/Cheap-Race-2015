@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="tv.laidback.cheaprace2015.TeamsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Sync Test"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:textSize="50sp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/headerSyncTest" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:id="@+id/buttonSyncTestStart"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_below="@+id/headerSyncTest"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:layout_marginTop="20sp" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/buttonSyncTestStart"
+        android:layout_marginTop="33dp"
+        android:layout_marginLeft="20sp"
+        android:background="#fffcfffd"
+        android:progress="30"
+        android:layout_alignRight="@+id/headerSyncTest"
+        android:layout_alignEnd="@+id/headerSyncTest"
+        android:layout_marginRight="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0%"
+        android:id="@+id/percentage"
+        android:textAlignment="center"
+        android:layout_above="@+id/statusLine"
+        android:layout_toRightOf="@+id/progressBar"
+        android:layout_toEndOf="@+id/progressBar"
+        android:layout_marginBottom="-4dp"
+        android:layout_marginLeft="-5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Idle..."
+        android:id="@+id/statusLine"
+        android:layout_below="@+id/progressBar"
+        android:layout_marginLeft="20dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonFetchCancel"
+        android:src="@drawable/ic_highlight_off_black_24dp"
+        android:layout_alignTop="@+id/progressBar"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="-5dp" />
+
+</RelativeLayout>

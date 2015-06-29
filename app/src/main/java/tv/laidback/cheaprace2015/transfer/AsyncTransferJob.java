@@ -34,7 +34,8 @@ import java.util.List;
  */
 public class AsyncTransferJob extends AsyncTask<View, String, String> {
     final String PI_IP_ADDRESS="192.168.1.106";         // Pi IP address assigned by Wifi router
-    final String HUB_SSID = "Cheap Race 2015 Sync Hub"; // SSID of Wifi router
+    // final String HUB_SSID = "Cheap Race 2015 Sync Hub"; // SSID of Wifi router
+    final String HUB_SSID = "Solna003"; // SSID of Wifi router
     final int PI_SFTP_PORT=22;                          // Pi SFTP server port
     private static final String TAG = AsyncTransferJob.class.getSimpleName();
     private String ftpServer;
@@ -42,6 +43,7 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
     private TextView statusLine;
     private TextView progressValue;
     private Context context;
+    private WifiManager wm=null;
 
     public AsyncTransferJob(Context context, final String server, View... ui) {
         this.context=context;
@@ -49,6 +51,7 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
         progressBar=(ProgressBar)ui[0];
         statusLine=(TextView)ui[1];
         progressValue=(TextView)ui[2];
+        wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
 
     protected String doInBackground(View... params) {
@@ -93,8 +96,7 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
      * @return list of networks or null if no Wifi detected
      */
     private boolean cheapRaceWifiPresent(Context context) {
-        final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        List<ScanResult> results = wifiManager.getScanResults();
+        List<ScanResult> results = wm.getScanResults();
         ScanResult bestSignal = null;
         int count = 1;
         String etWifiList = "";
@@ -116,8 +118,7 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
          context.registerReceiver(new BroadcastReceiver() {
              public void onReceive(Context c, Intent i) {
                  // Code to execute when SCAN_RESULTS_AVAILABLE_ACTION event occurs
-                 WifiManager w = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-                 scanResultHandler(w.getScanResults()); // your method to handle Scan results
+                 scanResultHandler(wm.getScanResults()); // your method to handle Scan results
              //    if (ScanAsFastAsPossible) w.startScan(); // relaunch scan immediately
              //    else { /* Schedule the scan to be run later here */}
              }
@@ -125,13 +126,13 @@ public class AsyncTransferJob extends AsyncTask<View, String, String> {
      }
 
      private void scanResultHandler(List<ScanResult> results) {
-
+        Log.d(TAG,"Scan result");
      }
-
+/*
     // Launch  wifiscanner the first time here (it will call the broadcast receiver above)
     WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     boolean a = wm.startScan();
-
+*/
     /**
      * Attempt to change Wifi connectivity over to the Sync Hub router
      * Keep note of any existing Wifi connection so it can be restored when sync done.

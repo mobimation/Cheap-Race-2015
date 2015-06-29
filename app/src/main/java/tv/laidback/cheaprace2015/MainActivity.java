@@ -27,7 +27,7 @@ import tv.laidback.cheaprace2015.location.LocalisationService;
 import tv.laidback.cheaprace2015.location.MapFragment;
 import tv.laidback.cheaprace2015.sql.LocationDataSource;
 import tv.laidback.cheaprace2015.sync.SyncService;
-import tv.laidback.cheaprace2015.sync.SyncTestFragment;
+import tv.laidback.cheaprace2015.sync.SyncTestFragment2;
 import tv.laidback.cheaprace2015.teams.TeamsFragment;
 
 
@@ -286,7 +286,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                 case 1:
                     return MapFragment.newInstance(position + 1);
                 case 2:
-                    return SyncTestFragment.newInstance(position + 1);
+                    return SyncTestFragment2.newInstance(position + 1);
                 default:
                     return null;
             }

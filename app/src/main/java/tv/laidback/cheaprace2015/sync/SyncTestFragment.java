@@ -62,7 +62,7 @@ public class SyncTestFragment extends Fragment {
 
         defaultButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new AsyncTransferJob(getActivity().getBaseContext(),"192.168.0.187",progress,status,progressValue).execute();
+                new AsyncTransferJob(getActivity().getBaseContext(),"192.168.1.106",progress,status,progressValue).execute();
             }
         });
         return v;

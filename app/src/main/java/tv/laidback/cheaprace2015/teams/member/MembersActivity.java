@@ -29,7 +29,7 @@ public class MembersActivity extends Activity {
         // Set team name header
         final String team=intent.getStringExtra("team");
         final String[] members=intent.getStringArrayExtra("members");
-        TextView teamName=(TextView) findViewById(R.id.teamName);
+        TextView teamName=(TextView) findViewById(R.id.labelTeamName);
         teamName.setText(team);
         // Add name of team members to list
         ListView memberList = (ListView) findViewById(R.id.teamMembers);
@@ -38,7 +38,7 @@ public class MembersActivity extends Activity {
         for (int n=0; n<members.length; n++)
             listItems.add(n,members[n]);
         adapter=new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,
+                R.layout.simple_list_text,
                 listItems);
         memberList.setAdapter(adapter);
         memberList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -50,6 +50,7 @@ public class MembersActivity extends Activity {
                 Intent i=new Intent(MembersActivity.this, MemberPhoto.class);
                 i.putExtra("team", team);
                 i.putExtra("member",member);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(i);
             }
         });

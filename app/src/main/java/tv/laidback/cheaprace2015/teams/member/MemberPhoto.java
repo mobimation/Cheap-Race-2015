@@ -20,7 +20,7 @@ public class MemberPhoto extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_photo);
-        TextView teamHeader=(TextView)findViewById(R.id.labelTeamName);
+        TextView teamHeader=(TextView)findViewById(R.id.teamName);
         TextView teamMember=(TextView)findViewById(R.id.memberName);
         Intent intent = getIntent();
         // Set team name header
@@ -36,6 +36,7 @@ public class MemberPhoto extends Activity {
             public void onClick(View v) {
                 // Launch photo capture activity
                 Intent intent = new Intent(MemberPhoto.this, MemberPhotoCapture.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, 1);
             }
         });

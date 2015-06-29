@@ -35,6 +35,7 @@ public class TeamsFragment extends Fragment {
      * teams represent an index 0..29 of the competing teams.
      * Each team consists of members which are accessible through the index.
      */
+    LocalBroadcastManager lbm=null;
 
     private final String TAG = getClass().getSimpleName();
 
@@ -46,7 +47,7 @@ public class TeamsFragment extends Fragment {
             this.members=members;
         }
     }
-    private Team[] teams;
+    private Team[] teams = new Team[27];
 
     /**
      * Instantiate teams and their members
@@ -288,7 +289,6 @@ public class TeamsFragment extends Fragment {
     }
 
     TextView serviceMessage=null;
-    final LocalBroadcastManager lbm=LocalBroadcastManager.getInstance(getActivity());
     int count=0;
 
     final BroadcastReceiver updateUIReceiver = new BroadcastReceiver() {
@@ -338,6 +338,7 @@ public class TeamsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_teams, container, false);
+        lbm=LocalBroadcastManager.getInstance(getActivity());
         serviceMessage=(TextView)view.findViewById(R.id.serviceMessage);
         ListView teamsList=(ListView)view.findViewById(R.id.teamsList);
         ArrayList<String> listItems=new ArrayList<String>();
@@ -345,7 +346,7 @@ public class TeamsFragment extends Fragment {
         for (int n=0; n<teams.length; n++)
             listItems.add(n,teams[n].teamName);
         adapter=new ArrayAdapter<String>(this.getActivity(),
-                android.R.layout.simple_list_item_1,
+                R.layout.simple_list_text,
                 listItems);
         teamsList.setAdapter(adapter);
         teamsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -356,7 +357,8 @@ public class TeamsFragment extends Fragment {
                 // Launch team list activity with data
                 Intent i=new Intent(getActivity().getApplicationContext(),MembersActivity.class);
                 i.putExtra("team", teamInfo.teamName);
-                i.putExtra("members",teamInfo.members);
+                i.putExtra("members", teamInfo.members);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getActivity().getApplicationContext().startActivity(i);
             }
         });
