@@ -174,7 +174,7 @@ public class MapFragment extends Fragment {
     /**** The mapfragment's id must be removed from the FragmentManager
      **** or else if the same it is passed on the next time then
      **** app will crash ****/
-
+// TODO does not work on tablet
     @Override
     public void onDestroyView() {
         super.onDestroyView();
