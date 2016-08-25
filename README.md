@@ -1,17 +1,20 @@
 # Cheap-Race-2015
 The Swedish Jaguar Club "Cheap Race 2015" event app - partial implementation
 
-Cheap Race is an almost annually recurring competition where members of the Swedish Jaguar Club form teams
-made up of friends, family and what have you, and 
+Cheap Race is a bi-annual recurring competition where members of the Swedish Jaguar Club form teams
+made up of friends, family and what have you, for entering the Cheap Race competition.
+It is about:
 (1) purchase as low cost as possible UK registered car of Jaguar manufacture
 (2) drive it home to Sweden visa France, Germany and Denmark.
+(3) The team that report the lowest total cost of car+fuel+repairs+extras win the competition.
+
 The 2015 event gathered about 80 people driving some 28 vehicles.
 This Android app was intended to contribute social sharing of photos and video clips among team participants
-also in areas where insufficient Internet access would be the case. The app scans for the proximity of a
+in areas where insufficient Internet access would be the case. The app scans for the proximity of a
 specific Wifi access point identity (SSID) and tries to connect to an SFTP (Secure FTP) server runnng on
 a Raspberry Pi board connected to a Wifi router, all installed in one of the Cheap Race vehicles.
 When proximity is detected the app connects to the SFTP server and begins syncing any shared photos/clips to the server
-as well as retreiving such files uploaded by other CR2015 attendees. This occurs in a reslilient way where losing
+as well as retreiving such files uploaded by other Cheap Race attendees. This occurs in a resilient way where losing
 proximity means the transfer is paused to be resumed when the Wifi network is again in proximity.
 An algorithm determines to what extent a sync operation is retried upon repeated proximity cases.
 The goal is that apps used by every event participant will be kept updated with all shared content so that
