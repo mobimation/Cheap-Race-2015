@@ -5,10 +5,10 @@ Cheap Race is a bi-annual recurring competition where members of the Swedish Jag
 made up of friends, family and what have you, for entering the Cheap Race competition.
 It is about:
 (1) purchase as low cost as possible UK registered car of Jaguar manufacture
-(2) drive it home to Sweden visa France, Germany and Denmark.
+(2) drive it home to Sweden via France, Germany and Denmark.
 (3) The team that report the lowest total cost of car+fuel+repairs+extras win the competition.
 
-The 2015 event gathered about 80 people driving some 28 vehicles.
+The 2015 event gathered about 80 people driving some 20 vehicles.
 This Android app was intended to contribute social sharing of photos and video clips among team participants
 in areas where insufficient Internet access would be the case. The app scans for the proximity of a
 specific Wifi access point identity (SSID) and tries to connect to an SFTP (Secure FTP) server runnng on
@@ -18,19 +18,19 @@ as well as retreiving such files uploaded by other Cheap Race attendees. This oc
 proximity means the transfer is paused to be resumed when the Wifi network is again in proximity.
 An algorithm determines to what extent a sync operation is retried upon repeated proximity cases.
 The goal is that apps used by every event participant will be kept updated with all shared content so that
-everyone can access what has been produced during the trip.  This can help reinforce the team spirit and
+everyone can access what shared media has been produced during the trip.  This can help reinforce the team spirit and
 build social bonding among participants.
 
 The app was not fully completed in time for July 2015 and was never officially announced or committed for such a release.
 The intention from a developer perspective was to experience and evaluate the implementation of such an app during the event
-to experience the dynamics of multiuser sync going in/out of proxility.
+to experience the dynamics of multiuser sync going in/out of Wifi proximity.
 
-The app also implements a Google Maps v2 based presentation of the target city and meetup location
+The app also contains a prototype for a Google Maps v2 based presentation of the target city and meetup location
 for each day going through Europe. By pressing the circular button overlayed on the map the user is taken
 to the destination location for each day.
 
 The app includes a startup playback of the Cheap Race Trailer, 
-a Youtube video made in earlier years of the Cheap Race event.
+a Youtube video that marketed earlier years of the Cheap Race event.
 
 The app does not include several of the planned features such as
 - realtime position on map of every participating vehicle as reported by
